@@ -14,6 +14,8 @@ import SignIn from './views/SignIn';
 // import UnderDevelopment from './views/UnderDevelopment';
 // import NotFound from './views/NotFound';
 
+import PrivateRoute from './components/PrivateRoute';
+
 export default class Routes extends Component {
   render() {
     return (
@@ -23,7 +25,7 @@ export default class Routes extends Component {
           from="/"
           to="/dashboard"
         />
-        <Route
+        <PrivateRoute
           component={Dashboard}
           exact
           path="/dashboard"
@@ -33,27 +35,27 @@ export default class Routes extends Component {
           exact
           path="/sign-in"
         />
-        <Route
+        <PrivateRoute
           component={Location}
           exact
           path="/location"
         />
-        <Route
+        <PrivateRoute
           component={AnchorManagement}
           exact
           path="/anchor-management"
         />
-        <Route
+        <PrivateRoute
           component={TagManagement}
           exact
           path="/tag-management"
         />
-        <Route
+        <PrivateRoute
           component={Statistics}
           exact
           path="/statistics"
         />
-        <Route
+        <PrivateRoute
           component={Settings}
           exact
           path="/settings"

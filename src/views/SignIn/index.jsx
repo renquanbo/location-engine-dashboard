@@ -31,6 +31,9 @@ import styles from './styles';
 // Form validation schema
 import schema from './schema';
 
+import {setAuthenticationStatus} from '../../actions';
+import { connect } from 'react-redux';
+
 const CssTextField = withStyles(theme => ({
   root: {
     '& label': {
@@ -54,32 +57,6 @@ const CssTextField = withStyles(theme => ({
   },
 }))(TextField);
 
-// Service methods
-const signIn = (username, password) => {
-  let clientNameAndSecret = 'bcd:bcdsecret'
-  let encodedCNAS = window.btoa(clientNameAndSecret)
-  const self =this
-  axios({
-    method: 'post',
-    url: '/auth_server/oauth/token',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + encodedCNAS
-    },
-    data: 'grant_type=password&username=' + username + '&password=' + password + '&scope=all'
-  })
-    .then(function(response) {
-      localStorage.token_type = response.data.token_type
-      localStorage.access_token = response.data.access_token
-      localStorage.refresh_token = response.data.refresh_token
-      localStorage.tokenExpired = response.data.expires_in * 1000 + new Date().getTime()
-      // self.props.setLoginStatus(LoginStatus.LOGIN_SUCCESS)
-    })
-    .catch(function(error) {
-      // self.props.setLoginStatus(LoginStatus.LOGIN_FAILURE)
-      console.log(error)
-    })
-};
 
 class SignIn extends Component {
   state = {
@@ -128,24 +105,44 @@ class SignIn extends Component {
     this.setState(newState, this.validateForm);
   };
 
-  handleSignIn = async () => {
-    try {
-      const { history } = this.props;
-      const { values } = this.state;
+  handleSignIn = () => {
+    const { history } = this.props;
+    const { values } = this.state;
 
-      this.setState({ isLoading: true });
+    this.setState({ isLoading: true });
 
-      signIn(values.username, values.password);
-
-      localStorage.setItem('isAuthenticated', true);
-
-      history.push('/dashboard');
-    } catch (error) {
-      this.setState({
-        isLoading: false,
-        serviceError: error
-      });
-    }
+    let clientNameAndSecret = 'bcd:bcdsecret'
+    let encodedCNAS = window.btoa(clientNameAndSecret)
+    const self = this
+    axios({
+      method: 'post',
+      url: '/auth_server/oauth/token',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + encodedCNAS
+      },
+      data: 'grant_type=password&username=' + values.username + '&password=' + values.password + '&scope=all'
+    })
+      .then(function(response) {
+        localStorage.token_type = response.data.token_type
+        localStorage.access_token = response.data.access_token
+        localStorage.refresh_token = response.data.refresh_token
+        localStorage.tokenExpired = response.data.expires_in * 1000 + new Date().getTime()
+        self.props.dispatch(setAuthenticationStatus(true))
+        history.push('/dashboard');
+        
+      })
+      .catch(function(error) {
+        if(error.response.status === 400){
+          self.setState({
+            submitError: 'wrong password or wrong username!'
+          });
+        }
+        self.setState({
+          isLoading: false
+        });
+        self.props.dispatch(setAuthenticationStatus(false))
+      })
   };
 
   render() {
@@ -278,7 +275,13 @@ SignIn.propTypes = {
   history: PropTypes.object.isRequired
 };
 
+function mapStateToProps (state) {
+  return {isAuthenticated: state.authenticationStatus};
+}
+
+const SignInWithRedux = connect(mapStateToProps)(SignIn)
+
 export default compose(
   withRouter,
   withStyles(styles)
-)(SignIn);
+)(SignInWithRedux);

@@ -72,7 +72,7 @@ class Topbar extends Component {
   handleSignOut = () => {
     const { history } = this.props;
 
-    localStorage.setItem('isAuthenticated', false);
+    // localStorage.setItem('isAuthenticated', false);
     history.push('/sign-in');
   };
 

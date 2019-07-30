@@ -19,6 +19,8 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 
 import MaterialTable from 'material-table';
 
+import axios from 'axios';
+
 // Material helpers
 // import { withStyles } from '@material-ui/core/styles';
 
@@ -42,11 +44,6 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-// const styles = theme => ({
-//   cellHeader: {
-//     color: '#FFF'
-//   }
-// });
 
 class Editable extends React.Component {
   constructor(props) {
@@ -84,21 +81,33 @@ class Editable extends React.Component {
           }
         },
         { 
-          title: 'Level_ID', field: 'level_id', type: 'numeric',
+          title: 'Level ID', field: 'levelId', type: 'numeric',
           cellStyle: {
             fontSize: 20
           }
         },
       ],
       data: [
-        { id: 1, name: 'anchor1', x: 1.0, y: 1.1, height:2.0, level_id:1 },
-        { id: 2, name: 'anchor2', x: 4.0, y: 4.2, height:2.0, level_id:1 },
+        { id: 1, name: 'anchor1', x: 1.0, y: 1.1, height:2.0, levelId:1 },
+        { id: 2, name: 'anchor2', x: 4.0, y: 4.2, height:2.0, levelId:1 },
       ]
     }
   }
 
   componentDidMount(){
-    
+    axios({
+      method: 'get',
+      url: 'anchor_service/configuration/anchors',
+      headers: {
+        'Authorization': localStorage.token_type + ' ' + localStorage.access_token
+      }
+    })
+      .then(function(response){
+        console.log(response);
+      })
+      .catch(function(error){
+        console.log(error);
+      })
   }
 
   render() {
