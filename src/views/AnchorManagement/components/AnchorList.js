@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { forwardRef } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -16,10 +16,15 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContentWrapper from './SnackbarContentWrapper';
+import { withStyles } from '@material-ui/core/styles';
 
 import MaterialTable from 'material-table';
 
 import axios from 'axios';
+import {setAuthenticationStatus} from '../../../actions';
+import { connect } from 'react-redux';
 
 // Material helpers
 // import { withStyles } from '@material-ui/core/styles';
@@ -44,11 +49,33 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
+const styles = theme => ({
+  close: {
+    padding: theme.spacing(0.5),
+  },
+  error: {
+    backgroundColor: theme.palette.error.dark,
+  },
+  icon: {
+    fontSize: 20,
+  },
+  iconVariant: {
+    opacity: 0.9,
+    marginRight: theme.spacing(1),
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+});
 
-class Editable extends React.Component {
+
+class AnchorList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      open: false,
+      message: 'test message',
       columns: [
         { 
           title: 'ID', field: 'id', type: 'numeric',
@@ -88,86 +115,148 @@ class Editable extends React.Component {
         },
       ],
       data: [
-        { id: 1, name: 'anchor1', x: 1.0, y: 1.1, height:2.0, levelId:1 },
-        { id: 2, name: 'anchor2', x: 4.0, y: 4.2, height:2.0, levelId:1 },
+        
       ]
     }
+    this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
   }
 
   componentDidMount(){
+    this.getAnchorListData();
+  }
+
+  getAnchorListData() {
+    const self = this
     axios({
       method: 'get',
-      url: 'anchor_service/configuration/anchors',
+      url: '/configuration_service/anchors',
       headers: {
         'Authorization': localStorage.token_type + ' ' + localStorage.access_token
       }
     })
       .then(function(response){
-        console.log(response);
+        self.setState({data: response.data});
       })
       .catch(function(error){
-        console.log(error);
+        if(error.response.status === 400){
+          self.props.dispatch(setAuthenticationStatus(false))
+        }
       })
+  }
+
+  handleSnackbarClose(){
+    this.setState({open: false});
   }
 
   render() {
     return (
-      <MaterialTable
-        icons={tableIcons}
-        title="Anchor List"
-        columns={this.state.columns}
-        data={this.state.data}
-        options={{
-          headerStyle: {
-            fontSize: 14,
-          },
-          searchFiledStyle: {
-            title: {
-              fontSize: 20,
-              backgroundColor: '#124567'
+      <Fragment>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbarClose}
+        >
+          <SnackbarContentWrapper
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message={this.state.message}
+          />
+        </Snackbar>
+        <MaterialTable
+          icons={tableIcons}
+          title="Anchor List"
+          columns={this.state.columns}
+          data={this.state.data}
+          options={{
+            headerStyle: {
+              fontSize: 14,
+            },
+            searchFiledStyle: {
+              title: {
+                fontSize: 20,
+                backgroundColor: '#124567'
+              }
             }
-          }
-        }}
-        editable={{
-          onRowAdd: newData =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                {
-                  const data = this.state.data;
-                  data.push(newData);
-                  this.setState({ data }, () => resolve());
+          }}
+          editable={{
+            onRowAdd: newData => {
+                const self = this
+                return axios({
+                  method: 'post',
+                  url: '/configuration_service/anchors',
+                  headers: {
+                    'Authorization': localStorage.token_type + ' ' + localStorage.access_token
+                  },
+                  data: newData
+                })
+                  .then(function(response){
+                    self.getAnchorListData();
+                  })
+                  .catch(function(error){
+                    if(error.response){
+                      self.setState({message: error.response.data.message});
+                      self.setState({open: true});
+                    }
+                  })
+              },
+            onRowUpdate: (newData, oldData) =>{
+                const self = this
+                const data = self.state.data;
+                const index = data.indexOf(oldData);
+                const id = data[index].id
+                return axios({
+                  method: 'put',
+                  url: '/configuration_service/anchors/' + id,
+                  headers: {
+                    'Authorization': localStorage.token_type + ' ' + localStorage.access_token
+                  },
+                  data: newData
+                })
+                  .then(function(response){
+                    self.getAnchorListData();
+                  })
+                  .catch(function(error){
+                    if(error.response){
+                      self.setState({message: error.response.data.message});
+                      self.setState({open: true});
+                    }
+                  })
+              },
+            onRowDelete: oldData => {
+              const self = this;
+              const data = self.state.data;
+              const index = data.indexOf(oldData);
+              const id = data[index].id
+              return axios({
+                method: 'delete',
+                url: '/configuration_service/anchors/' + id,
+                headers: {
+                  'Authorization': localStorage.token_type + ' ' + localStorage.access_token
                 }
-                resolve()
-              }, 1000)
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                {
-                  const data = this.state.data;
-                  const index = data.indexOf(oldData);
-                  data[index] = newData;
-                  this.setState({ data }, () => resolve());
-                }
-                resolve()
-              }, 1000)
-            }),
-          onRowDelete: oldData =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                {
-                  let data = this.state.data;
-                  const index = data.indexOf(oldData);
-                  data.splice(index, 1);
-                  this.setState({ data }, () => resolve());
-                }
-                resolve()
-              }, 1000)
-            }),
-        }}
-      />
+              })
+                .then(function(response){
+                  self.getAnchorListData();
+                })
+                .catch(function(error){
+                  if(error.response){
+                    self.setState({message: error.response.data.message});
+                    self.setState({open:true});
+                  }
+                })
+              }
+          }}
+        />
+      </Fragment>
     )
   }
 }
 
-export default Editable;
+function mapStateToProps (state) {
+  return {isAuthenticated: state.authenticationStatus};
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(AnchorList));

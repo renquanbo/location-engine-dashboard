@@ -195,7 +195,7 @@ class SignIn extends Component {
                   <div className={classes.fields}>
                     <CssTextField className={classes.textField} label="Username" name="username"
                       onChange={event => this.handleFieldChange('username', event.target.value)}
-                      type="text" value={values.username} variant="outlined"
+                      type="text" value={values.username} variant="outlined" autoComplete="off"
                     />
                     {showUsernameError && (
                       <Typography

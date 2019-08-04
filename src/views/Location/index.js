@@ -1,6 +1,7 @@
 import React from 'react';
 // Shared layouts
 import DashboardLayout from '../../layouts/Dashboard';
+import Content from './components/Content'
 
 class Location extends React.Component {
   // constructor(props){
@@ -10,9 +11,7 @@ class Location extends React.Component {
   render(){
     return(
       <DashboardLayout title="Dashboard">
-        <div>
-          this is location page
-        </div>
+        <Content></Content>
       </DashboardLayout> 
     )
   }
