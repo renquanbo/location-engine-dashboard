@@ -35,7 +35,7 @@ export default class Routes extends Component {
           exact
           path="/sign-in"
         />
-        <PrivateRoute
+        <Route
           component={Location}
           exact
           path="/location"
