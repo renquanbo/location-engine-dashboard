@@ -116,7 +116,7 @@ class SignIn extends Component {
     const self = this
     axios({
       method: 'post',
-      url: '/auth_server/oauth/token',
+      url: '/auth-server/oauth/token',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Basic ' + encodedCNAS
