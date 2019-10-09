@@ -129,7 +129,7 @@ class AnchorList extends React.Component {
     const self = this
     axios({
       method: 'get',
-      url: '/configuration_service/anchors',
+      url: '/api/anchor-service/anchors',
       headers: {
         'Authorization': localStorage.token_type + ' ' + localStorage.access_token
       }
