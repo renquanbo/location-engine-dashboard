@@ -53,6 +53,7 @@ class Sidebar extends Component {
           disablePadding
         >
           <ListItem
+            name="dashboard-link"
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
@@ -67,6 +68,7 @@ class Sidebar extends Component {
             />
           </ListItem>
           <ListItem
+            name="location-link"
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
@@ -81,6 +83,7 @@ class Sidebar extends Component {
             />
           </ListItem>
           <ListItem
+            name="anchor-mangement-link"
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
@@ -95,6 +98,7 @@ class Sidebar extends Component {
             />
           </ListItem>
           <ListItem
+            name="tag-management-link"
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
@@ -109,6 +113,7 @@ class Sidebar extends Component {
             />
           </ListItem>
           <ListItem
+            name="statistics-link"
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
@@ -123,6 +128,7 @@ class Sidebar extends Component {
             />
           </ListItem>
           <ListItem
+            name="settings-link"
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}

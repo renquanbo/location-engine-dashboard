@@ -57,7 +57,7 @@ class LocationCanvas extends React.Component{
     const self = this
     axios({
       method: 'get',
-      url: '/configuration_service/level',
+      url: '/api/anchor-service/level',
       headers: {
         'Authorization': localStorage.token_type + ' ' + localStorage.access_token
       }
@@ -77,7 +77,7 @@ class LocationCanvas extends React.Component{
     const self = this
     axios({
       method: 'get',
-      url: '/configuration_service/anchors',
+      url: '/api/anchor-service/anchors',
       headers: {
         'Authorization': localStorage.token_type + ' ' + localStorage.access_token
       }

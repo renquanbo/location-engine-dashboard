@@ -187,7 +187,7 @@ class AnchorList extends React.Component {
                 const self = this
                 return axios({
                   method: 'post',
-                  url: '/configuration_service/anchors',
+                  url: '/api/anchor-service/anchors',
                   headers: {
                     'Authorization': localStorage.token_type + ' ' + localStorage.access_token
                   },
@@ -210,7 +210,7 @@ class AnchorList extends React.Component {
                 const id = data[index].id
                 return axios({
                   method: 'put',
-                  url: '/configuration_service/anchors/' + id,
+                  url: '/api/anchor-service/anchors/' + id,
                   headers: {
                     'Authorization': localStorage.token_type + ' ' + localStorage.access_token
                   },
@@ -233,7 +233,7 @@ class AnchorList extends React.Component {
               const id = data[index].id
               return axios({
                 method: 'delete',
-                url: '/configuration_service/anchors/' + id,
+                url: '/api/anchor-service/anchors/' + id,
                 headers: {
                   'Authorization': localStorage.token_type + ' ' + localStorage.access_token
                 }

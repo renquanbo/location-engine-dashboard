@@ -109,6 +109,7 @@ class Topbar extends Component {
               className={classes.menuButton}
               onClick={onToggleSidebar}
               variant="text"
+              name="toggle-sider-bar-button"
             >
               {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
