@@ -4,6 +4,8 @@ import Box from '@mui/material/Box';
 import styled from '@emotion/styled';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from 'next/dist/client/router';
+import { LoginRequest } from '../lib/model/login';
+import authService from '../lib/services/authService';
 
 const StyledField = styled(TextField)`
   & fieldset {
@@ -25,18 +27,16 @@ const Logo = styled.div`
     margin: 16px;
 `;
 
-interface IFormInput {
-  email: string;
-  password: string;
-}
 
 export default function LoginPage() {
   const router = useRouter();
-  const { control, handleSubmit } = useForm<IFormInput>();
+  const { control, handleSubmit } = useForm<LoginRequest>();
 
-  const onSubmit: SubmitHandler<IFormInput> = data => {
-    console.log(data);
-    router.push('/dashboard');
+  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
+    const loginSuccess = await authService.login(data);
+    if(loginSuccess) {
+      router.push('/dashboard');
+    }
   };
   return (
     <Box sx={{
@@ -74,7 +74,7 @@ export default function LoginPage() {
                       label="Email address"
                       type="text"
                       inputProps={{
-                        autocomplete: "disabled",
+                        autoComplete: "disabled",
                       }}/>}
                 ></Controller>
                 <Controller
@@ -85,7 +85,7 @@ export default function LoginPage() {
                       label="Password"
                       type="password"
                       inputProps={{
-                        autocomplete: "new-password",
+                        autoComplete: "new-password",
                       }}
                     />}
                 ></Controller>
