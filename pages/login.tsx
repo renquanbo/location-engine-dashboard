@@ -6,6 +6,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from 'next/dist/client/router';
 import { LoginRequest } from '../lib/model/login';
 import authService from '../lib/services/authService';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const StyledField = styled(TextField)`
   & fieldset {
@@ -30,7 +32,16 @@ const Logo = styled.div`
 
 export default function LoginPage() {
   const router = useRouter();
-  const { control, handleSubmit } = useForm<LoginRequest>();
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .required('Email is required')
+      .email('Email is invalid'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters')
+      .max(40, 'Password must not exceed 64 characters'),
+  });
+  const { control, handleSubmit, formState: { errors } } = useForm<LoginRequest>({resolver: yupResolver(validationSchema)});
 
   const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
     const loginSuccess = await authService.login(data);
@@ -75,7 +86,10 @@ export default function LoginPage() {
                       type="text"
                       inputProps={{
                         autoComplete: "disabled",
-                      }}/>}
+                      }}
+                      error={errors.email ? true : false}
+                      helperText={errors.email?.message}
+                      />}
                 ></Controller>
                 <Controller
                   name="password"
@@ -87,6 +101,8 @@ export default function LoginPage() {
                       inputProps={{
                         autoComplete: "new-password",
                       }}
+                      error={errors.password ? true : false}
+                      helperText={errors.password?.message}
                     />}
                 ></Controller>
                 <Button variant="contained" type="submit" sx={{width: "100%", mt: 2, borderRadius: "16px", p: "8px 22px", textTransform: 'none'}}>Log in</Button>
