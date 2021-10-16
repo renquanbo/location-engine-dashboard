@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Button, Card, CardContent, Container, Divider, Input, Link, TextField, Typography } from "@mui/material";
+import { Button, Card, CardContent, Container, Divider, Input, Link, TextField, Typography, useMediaQuery } from "@mui/material";
 import Box from '@mui/material/Box';
 import styled from '@emotion/styled';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -31,6 +31,7 @@ const Logo = styled.div`
 
 
 export default function LoginPage() {
+  const notMobileDevices = useMediaQuery('(min-width:600px)');
   const router = useRouter();
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -57,11 +58,11 @@ export default function LoginPage() {
       minHeight: "100vh",
       color: 'text.primary',
     }}>
-      <Container maxWidth="sm" sx={{ padding: "132px 24px 80px" }}>
-        <Typography variant="h3" sx={{textAlign: "center"}}>Location Engine System</Typography>
-        <Card sx={{ minWidth: 275, mt: "110px", borderRadius: "16px" }}>
+      <Container maxWidth="sm" sx={{ padding: "11vh 24px 8px" }}>
+        <Typography variant={notMobileDevices ? "h3" :"h5"} sx={{textAlign: "center"}}>Location Engine System</Typography>
+        <Card sx={{ minWidth: 275, mt: "8vh", borderRadius: "16px" }}>
           <CardContent sx={{ display: "flex", flexDirection: "column", p: 4 }}>
-            <Box sx={{ mb: 3 , display: "flex", justifyContent: "space-between"}}>
+            <Box sx={{ mb: 2 , display: "flex", justifyContent: "space-between"}}>
               <div>
                 <Typography variant="h4" gutterBottom>
                   Log in
@@ -74,7 +75,7 @@ export default function LoginPage() {
                 <Image src="/images/bcd-logo-blue-small.png" alt="logo" width={72} height={48} ></Image>
               </Logo>
             </Box>
-            <Box sx={{ flexGrow: 1, mt: 3 }}>
+            <Box sx={{ flexGrow: 1, mt: 2 }}>
               <form onSubmit={handleSubmit(onSubmit)}>
               <Input style={{display: "none"}} type="password" name="fakepassword"/>
                 <Controller
