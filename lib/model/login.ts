@@ -1,7 +1,9 @@
+import { Role } from "./role";
+
 export interface LoginResponse {
   userId: number;
   token: string;
-  role: string;
+  role: Role;
 }
 
 export interface LoginRequest {
@@ -14,13 +16,13 @@ export interface RegisterFormValues {
   email: string;
   password: string;
   confirmPassword: string;
-  role?: string;
+  role: Role;
 }
 
 export interface SignUpResponse {
   id: number;
   email: string;
-  role: string;
+  role: Role;
 }
 
 export type SignUpRequest = Omit<RegisterFormValues, "confirmPassword">;

@@ -8,6 +8,9 @@ import type { AppProps } from 'next/app'
 import React from 'react';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { SnackbarProvider } from 'notistack';
+import { SnackbarUtilsConfigurator } from '../lib/utils/SnackUtils';
+
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
 
@@ -29,11 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           mode,
           background: {
             ...(mode === 'dark'
-            ? {
+              ? {
                 default: "#171c24",
                 paper: "#222b36"
               }
-            : {
+              : {
                 default: "#f4f5f7",
                 paper: "#ffffff"
               }),
@@ -58,12 +61,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           },
           text: {
             ...(mode === 'dark'
-            ? {
+              ? {
                 disabled: "rgba(255,255,255, 0.5)",
                 primary: "#ffffff",
                 secondary: "#919eab"
               }
-            : {
+              : {
                 disabled: "rgba(0,0,0, 0.38)",
                 primary: "#172b4d",
                 secondary: "#6b778c"
@@ -76,10 +79,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <IconButton sx={{ top: '0', right: '10px', position: 'fixed', color: 'text.primary' }} onClick={colorMode.toggleColorMode} >
-          {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-        </IconButton>
-        <Component {...pageProps}></Component>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ horizontal: 'center', vertical: 'top'}}>
+          <SnackbarUtilsConfigurator />
+          <IconButton sx={{ top: '0', right: '10px', position: 'fixed', color: 'text.primary' }} onClick={colorMode.toggleColorMode} >
+            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+          <Component {...pageProps}></Component>
+        </SnackbarProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   )

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Button, Card, CardContent, Container, Divider, Input, Link, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Button, Card, CardContent, Container, Divider, FormControl, FormControlLabel, FormLabel, Input, Link, Radio, RadioGroup, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import Box from '@mui/material/Box';
 import styled from '@emotion/styled';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -50,9 +50,10 @@ export default function SignUpPage() {
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>({ resolver: yupResolver(validationSchema) });
 
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
-    const loginSuccess = await authService.login(data);
-    if (loginSuccess) {
-      router.push('/dashboard');
+    console.log(data);
+    const signUpSuccess = await authService.signUp(data);
+    if (signUpSuccess) {
+      router.push('/login');
     }
   };
 
@@ -84,6 +85,20 @@ export default function SignUpPage() {
             <Box sx={{ flexGrow: 1, mt: 2 }}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Input style={{ display: "none" }} type="password" name="fakepassword" />
+
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field: { onChange, value } }) =>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend">Role</FormLabel>
+                      <RadioGroup row aria-label="Role" name="role" defaultValue="ROLE_USER" value={value || ''} onChange={onChange}>
+                        <FormControlLabel value="ROLE_USER" control={<Radio />} label="User" />
+                        <FormControlLabel value="ROLE_MANAGER" control={<Radio />} label="Manager" />
+                      </RadioGroup>
+                    </FormControl>
+                  }
+                ></Controller>
                 <Controller
                   name="email"
                   control={control}

@@ -20,8 +20,8 @@ class AuthService extends BaseApiService {
   }
 
   async signUp(req: SignUpRequest): Promise<boolean> {
-    const res = await this.post<IResponse<SignUpResponse>, SignUpRequest>('sign-up', req);
-    if (!!res.data) {
+    const res = await this.post<IResponse<SignUpResponse>, SignUpRequest>('api/sign-up', req).then(this.showMessage(true));
+    if (!!res?.data) {
       return true;
     } else {
       return false;
