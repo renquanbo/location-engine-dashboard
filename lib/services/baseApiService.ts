@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { IResponse } from "../model/api";
+import SnackUtils from "../utils/SnackUtils";
 import storage from "./storage";
 
 const axiosInstance = axios.create({
@@ -8,7 +9,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
   // if request url does not include login, then add authorization token to headers
-  if (!config.url?.includes("login")) {
+  if (!config.url?.includes("login") && !config.url?.includes("sign-up")) {
     return {
       ...config,
       url: config.baseURL + 'api/',
@@ -29,7 +30,7 @@ export default class BaseApiService {
       .catch((err) => this.errorHandler(err))
   }
 
-  protected async post<T, D>(path: string, data?: D, config?:AxiosRequestConfig<D>): Promise<T> {
+  protected async post<T, D>(path: string, data?: D, config?: AxiosRequestConfig<D>): Promise<T> {
     return axiosInstance
       .post<T>(path, data, config)
       .then((res) => res.data)
@@ -52,10 +53,28 @@ export default class BaseApiService {
 
   private errorHandler(err: AxiosError<IResponse>): any {
     const msg = err.response?.data.msg;
-    const status = err.response?.status;
-    const code = err.response?.data.code;
-    console.log(status);
-    console.log(code);
-    console.log(msg);
+    if (!!msg) {
+      SnackUtils.error(msg);
+    }
   }
+
+  protected isError(code: number): boolean {
+    return !(code.toString().startsWith('2') || code.toString().startsWith('3'));
+  }
+
+
+  protected showMessage = (isSuccessDisplay = false) => (res: IResponse): IResponse => {
+    const { code, msg } = res;
+    const isError = this.isError(code);
+
+    if (isError) {
+      SnackUtils.error(msg);
+    }
+
+    if (isSuccessDisplay && !isError) {
+      SnackUtils.success(msg);
+    }
+
+    return res;
+  };
 }

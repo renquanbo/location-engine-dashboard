@@ -1,13 +1,14 @@
 import Image from 'next/image';
-import { Button, Card, CardContent, Container, Divider, Input, Link, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Button, Card, CardContent, Container, Divider, FormControl, FormControlLabel, FormLabel, Input, Link, Radio, RadioGroup, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import Box from '@mui/material/Box';
 import styled from '@emotion/styled';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from 'next/dist/client/router';
-import { LoginRequest } from '../lib/model/login';
+import { LoginRequest, RegisterFormValues } from '../lib/model/login';
 import authService from '../lib/services/authService';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 
 const StyledField = styled(TextField)`
   & fieldset {
@@ -30,7 +31,8 @@ const Logo = styled.div`
 `;
 
 
-export default function LoginPage() {
+
+export default function SignUpPage() {
   const notMobileDevices = useMediaQuery('(min-width:600px)');
   const router = useRouter();
   const validationSchema = Yup.object().shape({
@@ -41,15 +43,20 @@ export default function LoginPage() {
       .required('Password is required')
       .min(6, 'Password must be at least 6 characters')
       .max(40, 'Password must not exceed 64 characters'),
+    confirmPassword: Yup.string()
+      .required('Confirm Password is required')
+      .oneOf([Yup.ref('password'), null], "Password does not match!")
   });
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginRequest>({ resolver: yupResolver(validationSchema) });
+  const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>({ resolver: yupResolver(validationSchema) });
 
-  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
-    const loginSuccess = await authService.login(data);
-    if (loginSuccess) {
-      router.push('/dashboard');
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
+    console.log(data);
+    const signUpSuccess = await authService.signUp(data);
+    if (signUpSuccess) {
+      router.push('/login');
     }
   };
+
   return (
     <Box sx={{
       backgroundColor: "background.default",
@@ -65,10 +72,10 @@ export default function LoginPage() {
             <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between" }}>
               <div>
                 <Typography variant="h4" gutterBottom>
-                  Log in
+                  Sign up
                 </Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                  Log in on the internal platform
+                  Sign up your account
                 </Typography>
               </div>
               <Logo>
@@ -78,6 +85,20 @@ export default function LoginPage() {
             <Box sx={{ flexGrow: 1, mt: 2 }}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Input style={{ display: "none" }} type="password" name="fakepassword" />
+
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field: { onChange, value } }) =>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend">Role</FormLabel>
+                      <RadioGroup row aria-label="Role" name="role" defaultValue="ROLE_USER" value={value || ''} onChange={onChange}>
+                        <FormControlLabel value="ROLE_USER" control={<Radio />} label="User" />
+                        <FormControlLabel value="ROLE_MANAGER" control={<Radio />} label="Manager" />
+                      </RadioGroup>
+                    </FormControl>
+                  }
+                ></Controller>
                 <Controller
                   name="email"
                   control={control}
@@ -106,16 +127,33 @@ export default function LoginPage() {
                       helperText={errors.password?.message}
                     />}
                 ></Controller>
-                <Button variant="contained" type="submit" sx={{ width: "100%", mt: 2, borderRadius: "16px", p: "8px 22px", textTransform: 'none' }}>Log in</Button>
+                <Controller
+                  name="confirmPassword"
+                  control={control}
+                  render={({ field }) =>
+                    <StyledField {...field}
+                      label="Confirm Password"
+                      type="password"
+                      inputProps={{
+                        autoComplete: "new-password",
+                      }}
+                      error={errors.confirmPassword ? true : false}
+                      helperText={errors.confirmPassword?.message}
+                    />}
+                ></Controller>
+                <Button variant="contained" type="submit"
+                  sx={{ width: "100%", mt: 2, borderRadius: "16px", p: "8px 22px", textTransform: 'none' }}>
+                  Sign up
+                </Button>
               </form>
             </Box>
             <Divider sx={{ m: "24px 0px" }} />
-            <Link href="/signup" underline="hover" variant="body2" color="textSecondary">
-              Create new account
-            </Link>
-            <Link href="#" underline="hover" variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-              Forget password
-            </Link>
+            <Stack direction="row" spacing={1}>
+              <Typography variant="body2" color="textSecondary">Already have an account?</Typography>
+              <Link href="/login" underline="hover" variant="body2" color="textSecondary">
+                Log in
+              </Link>
+            </Stack>
           </CardContent>
         </Card>
       </Container>
