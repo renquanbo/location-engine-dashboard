@@ -10,6 +10,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { SnackbarProvider } from 'notistack';
 import { SnackbarUtilsConfigurator } from '../lib/utils/SnackUtils';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => { } });
@@ -42,10 +43,19 @@ function MyApp({ Component, pageProps }: AppProps) {
               }),
           },
           primary: {
-            contrastText: "#ffffff",
-            dark: "rgb(60, 70, 147)",
-            light: "rgb(119, 131, 219)",
-            main: "#5664d2"
+            ...(mode === 'dark'
+              ? {
+                contrastText: "#ffffff",
+                dark: "rgb(72, 99, 178)",
+                light: "rgb(134, 164, 255)",
+                main: "#688eff"
+              }
+              : {
+                contrastText: "#ffffff",
+                dark: "rgb(60, 70, 147)",
+                light: "rgb(119, 131, 219)",
+                main: "#5664d2"
+              }),
           },
           secondary: {
             contrastText: "#fff",
@@ -71,19 +81,25 @@ function MyApp({ Component, pageProps }: AppProps) {
                 primary: "#172b4d",
                 secondary: "#6b778c"
               }),
-          }
+          },
         },
+        shape: {
+          borderRadius: 16
+        },
+        typography: {
+          fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\""
+        }
       }),
     [mode],
   );
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ horizontal: 'center', vertical: 'top'}}>
+        <IconButton sx={{ top: '12px', right: '10px', position: 'fixed', color: 'text.primary', zIndex: '99999' }} onClick={colorMode.toggleColorMode} >
+          {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
           <SnackbarUtilsConfigurator />
-          <IconButton sx={{ top: '0', right: '10px', position: 'fixed', color: 'text.primary' }} onClick={colorMode.toggleColorMode} >
-            {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-          </IconButton>
           <Component {...pageProps}></Component>
         </SnackbarProvider>
       </ThemeProvider>
