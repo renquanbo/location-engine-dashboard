@@ -5,14 +5,16 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 
 const AppLayout = (props: React.PropsWithChildren<any>) => {
-  const {children} = props;
-  return(
-    <Box sx={{ display: 'flex', bgcolor:"background.default", height:"100vh",overflow: "hidden"}}>
+  const { children } = props;
+  return (
+    <Box sx={{ bgcolor: "background.default", height: "100vh", overflow: "hidden" }}>
       <Header></Header>
-      <Sidebar></Sidebar>
-      <Content>
-        {children}
-      </Content>
+      <Box sx={{ display: 'flex' }}>
+        <Sidebar></Sidebar>
+        <Content>
+          {children}
+        </Content>
+      </Box>
     </Box>
   )
 }

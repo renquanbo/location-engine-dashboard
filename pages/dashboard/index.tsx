@@ -27,10 +27,10 @@ export default function DashboardPage() {
         {arr.filter((element, index) => index < 2)
           .map((item, index) => (
           <>
-            <Typography variant="h2" key={index}>
+            <Typography variant="h2" key={"title" + index}>
               {item.title}
             </Typography>
-            <Typography paragraph key={index}>
+            <Typography paragraph key={"content" + index}>
               {item.content}
             </Typography>
           </>
