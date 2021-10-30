@@ -27,72 +27,12 @@ const StyledListSubHeader = styled(ListSubheader)`
   padding-left: 0px;
 `
 
-//can add subheader to menu items array
-// const menuItems = [
-//   {
-//     subHeader: "general",
-//     items: [
-//       {
-//         text: "Overview",
-//         icon: <AssessmentIcon />
-//       },
-//       {
-//         text: "Analytics",
-//         icon: <PieChartIcon />
-//       },
-//       {
-//         text: "Account",
-//         icon: <PersonIcon />
-//       }]
-//   },
-//   {
-//     subHeader: "management",
-//     items: [
-//       {
-//         text: "Layers",
-//         icon: <LayersIcon />
-//       },
-//       {
-//         text: "Anchors",
-//         icon: <RouterIcon />
-//       },
-//       {
-//         text: "Tags",
-//         icon: <DockIcon />
-//       }]
-//   },
-//   {
-//     subHeader: "lab",
-//     items: [
-//       {
-//         text: "Todo List",
-//         icon: <ListAltIcon />
-//       },
-//       {
-//         text: "Calendar",
-//         icon: <TodayIcon />
-//       },
-//       {
-//         text: "Blogs",
-//         icon: <ArticleIcon />
-//       }]
-//   }
-// ]
 
-const drawerWidth = 280;
+const drawerWidth = 200;
 const prefix = "/dashboard"
 const Sidebar = () => {
   const router = useRouter();
-  // const [selectedMenuKey, setSelectedMenuKey] = React.useState('');
   const selectedMenuKey = getSelectedKey(router.pathname);
-  // console.log(selectedMenuKey);
-  // const handleListItemClick = (
-  //   event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-  //   menuKey: string,
-  // ) => {
-  //   setSelectedMenuKey(menuKey);
-  // };
-  // onClick={(event) => handleListItemClick(event, item.text)}
 
   return (
     <Drawer

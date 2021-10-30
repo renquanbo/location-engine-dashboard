@@ -7,9 +7,9 @@ import Sidebar from "./Sidebar";
 const AppLayout = (props: React.PropsWithChildren<any>) => {
   const { children } = props;
   return (
-    <Box sx={{ bgcolor: "background.default", height: "100vh", overflow: "hidden" }}>
+    <Box sx={{  }}>
       <Header></Header>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex' ,bgcolor: "background.default", height: "100vh", overflow: "hidden"}}>
         <Sidebar></Sidebar>
         <Content>
           {children}
