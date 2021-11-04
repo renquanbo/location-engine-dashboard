@@ -1,9 +1,9 @@
 import { Button, Card, CardContent, CardMedia, Grid, Paper, Typography } from "@mui/material";
-import AppLayout from "../../components/layout/AppLayout";
+import AppLayout from "../../../components/layout/AppLayout";
 import AddIcon from '@mui/icons-material/Add';
 import { useState } from "react";
-import LayerList from "../../components/layers/LayerList";
-import AddLayer from "../../components/layers/AddLayer";
+import LayerList from "../../../components/layers/LayerList";
+import AddLayer from "../../../components/layers/AddLayer";
 
 const layerData = {
   name: "Layer name",

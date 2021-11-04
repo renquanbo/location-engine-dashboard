@@ -1,20 +1,28 @@
 import { Button, Card, CardContent, CardMedia, Grid, Paper, Typography } from "@mui/material";
 import AppLayout from "../../components/layout/AppLayout";
 import AddIcon from '@mui/icons-material/Add';
-import { MouseEventHandler, useState } from "react";
-
-const layerData = {
-  name: "Layer name",
-  description: "this is the layer's description",
-  pictureUrl: "/images/office-floor-plan.png"
-}
+import { MouseEventHandler, useEffect, useState } from "react";
+import layerService from "../../lib/services/layerService";
+import { Paginator } from "../../lib/model/api";
+import { Layer } from "../../lib/model/layer";
+import Link from 'next/link';
+import { styled } from '@mui/system';
 
 interface IProps {
   addButtonClick: () => void
-}
+};
 
 export default function LayerList(props: IProps) {
-  const layers = Array(10).fill(layerData);
+  const [layers, setLayers] = useState<Layer[]>();
+  const [paginator, setPaginator] = useState<Paginator>({ page: 0, size: 10 })
+
+  useEffect(() => {
+    async function fetchLayerList() {
+      const { data } = await layerService.getLayerList(paginator);
+      setLayers(data?.layers);
+    }
+    fetchLayerList();
+  }, [paginator]);
 
   return (
     <>
@@ -28,14 +36,19 @@ export default function LayerList(props: IProps) {
       </Grid>
 
       <Grid container spacing={3}>
-        {layers.map((item, index) => (
+        {layers?.map((item, index) => (
           <Grid item xs={12} md={4} key={index}>
             <Card>
-              <CardMedia
-                component="img"
-                image={item.pictureUrl}
-                alt="floor plan"
-              />
+              <Link href={"/dashboard/layers/" + item.id} passHref>
+                <CardMedia
+                  component="img"
+                  image={item.floorPlan}
+                  alt="floor plan"
+                  sx={{ '&:hover': {
+                    cursor: 'pointer'
+                  }}}
+                />
+              </Link>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   {item.name}

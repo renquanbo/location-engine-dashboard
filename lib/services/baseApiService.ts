@@ -12,7 +12,7 @@ axiosInstance.interceptors.request.use((config) => {
   if (!config.url?.includes("login") && !config.url?.includes("sign-up")) {
     return {
       ...config,
-      url: config.baseURL + 'api/',
+      baseURL: config.baseURL + 'api/',
       headers: {
         ...config.headers,
         Authorization: "Bearer " + storage.token,
@@ -44,14 +44,19 @@ export default class BaseApiService {
       .catch((err) => this.errorHandler(err))
   }
 
-  protected async put<T>(path: string): Promise<T> {
+  protected async put<T,D>(path: string, data?: D): Promise<T> {
     return axiosInstance
-      .put<T>(path)
+      .put<T>(path, data)
       .then((res) => res.data)
       .catch((err) => this.errorHandler(err))
   }
 
   private errorHandler(err: AxiosError<IResponse>): any {
+    console.log(err.response);
+    const code = err.response?.status;
+    if(!!code && this.isUnauthorized(code)) {
+      window.location.href="http://localhost:3000/login"
+    }
     const msg = err.response?.data.msg;
     if (!!msg) {
       SnackUtils.error(msg);
@@ -60,6 +65,10 @@ export default class BaseApiService {
 
   protected isError(code: number): boolean {
     return !(code.toString().startsWith('2') || code.toString().startsWith('3'));
+  }
+
+  protected isUnauthorized(code: number): boolean {
+    return code === 401;
   }
 
 

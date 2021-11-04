@@ -3,3 +3,13 @@ export interface IResponse<T = any> {
   data?: T;
   msg: string;
 }
+
+export interface Paginator {
+  page: number;
+  size: number;
+}
+
+export interface ListResponse {
+  total: number;
+  paginator: Paginator;
+}

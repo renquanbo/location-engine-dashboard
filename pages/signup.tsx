@@ -50,7 +50,6 @@ export default function SignUpPage() {
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>({ resolver: yupResolver(validationSchema) });
 
   const onSubmit: SubmitHandler<RegisterFormValues> = async (data) => {
-    console.log(data);
     const signUpSuccess = await authService.signUp(data);
     if (signUpSuccess) {
       router.push('/login');

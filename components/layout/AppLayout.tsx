@@ -1,5 +1,6 @@
 import { Box } from "@mui/system";
 import React from "react";
+import withAuth from "../hoc/withAuth";
 import Content from "./Content";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -19,4 +20,4 @@ const AppLayout = (props: React.PropsWithChildren<any>) => {
   )
 }
 
-export default AppLayout;
+export default withAuth(AppLayout);
