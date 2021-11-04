@@ -29,6 +29,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   const theme = React.useMemo(
     () =>
       createTheme({
+        components: {
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                textTransform: "none"
+              }
+            }
+          }
+        },
         palette: {
           mode,
           background: {
