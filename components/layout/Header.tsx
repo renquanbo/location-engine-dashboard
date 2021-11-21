@@ -15,14 +15,25 @@ const Logo = styled.div`
     margin: 16px;
 `;
 
-const Header = () => {
+interface IProps {
+  open: boolean;
+  menuButtonClick: () => void;
+}
+
+const Header = (props: IProps) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ borderBottom: "1px solid rgba(145, 158, 171, 0.24)", boxShadow: "none", backgroundImage: "none", zIndex: "1300" }}>
         <Toolbar>
-          <Image src="/images/bcd-logo-blue-small.png" alt="logo" width={60} height={40} ></Image>
+          {props.open
+            ? <Image src="/images/bcd-logo-blue-small.png" alt="logo" width={60} height={40} ></Image>
+            : <IconButton onClick={props.menuButtonClick}>
+                <MenuIcon />
+              </IconButton>
+          }
+          {/* <Image src="/images/bcd-logo-blue-small.png" alt="logo" width={60} height={40} ></Image> */}
           <Box sx={{ flexGrow: 1 }}></Box>
-          <Badge badgeContent={5} color="warning" sx={{mr: "22px"}}>
+          <Badge badgeContent={5} color="warning" sx={{ mr: "22px" }}>
             <NotificationsRoundedIcon sx={{ fontSize: 30 }} />
           </Badge>
           <Avatar alt="avatar" src="/images/avatar.png" sx={{ mr: "42px", height: "28px", width: "28px" }} />

@@ -12,10 +12,16 @@ const HeaderOffset = styled('div')(({ theme }) => ({
   ...(theme.mixins.toolbar),
 }));
 
-const Content = (props: React.PropsWithChildren<any>) => {
+interface IProps {
+  open: boolean;
+  sideBarWidth: number;
+}
+
+const Content = (props: React.PropsWithChildren<any> & IProps) => {
   const { children } = props;
+  const marginLeft = props.open ? '0px' : `-${props.sideBarWidth}px`;
   return (
-    <Box component="main" sx={{ flexGrow: 1, height: "100%", overflow: "auto" }}>
+    <Box component="main" sx={{ flexGrow: 1, height: "100%", overflow: "auto" , marginLeft: marginLeft}}>
       <HeaderOffset />
       <Box sx={{p: 3}}>
         {children}
