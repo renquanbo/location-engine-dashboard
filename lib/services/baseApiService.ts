@@ -4,7 +4,8 @@ import SnackUtils from "../utils/SnackUtils";
 import storage from "./storage";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/"
+  // baseURL: "http://localhost:8080/"
+  baseURL: "http://192.168.2.58:8080/"
 })
 
 axiosInstance.interceptors.request.use((config) => {
@@ -73,6 +74,10 @@ export default class BaseApiService {
 
 
   protected showMessage = (isSuccessDisplay = false) => (res: IResponse): IResponse => {
+    if(!res || !res.code) {
+      console.log(res);
+      return res;
+    }
     const { code, msg } = res;
     const isError = this.isError(code);
 

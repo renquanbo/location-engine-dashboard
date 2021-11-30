@@ -64,7 +64,8 @@ export const menuItems = [
         text: "Blogs",
         icon: <ArticleIcon />,
         link: "blogs"
-      }]
+      }
+    ]
   }
 ]
 

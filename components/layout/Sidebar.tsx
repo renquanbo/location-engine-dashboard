@@ -5,16 +5,7 @@ import { Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Toolbar, L
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from '@emotion/styled';
 import { Box } from "@mui/system";
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import PieChartIcon from '@mui/icons-material/PieChart';
-import PersonIcon from '@mui/icons-material/Person';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import LayersIcon from '@mui/icons-material/Layers';
-import RouterIcon from '@mui/icons-material/Router';
-import DockIcon from '@mui/icons-material/Dock';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import TodayIcon from '@mui/icons-material/Today';
-import ArticleIcon from '@mui/icons-material/Article';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useRouter } from "next/dist/client/router";
 import { getSelectedKey, menuItems } from "../../lib/utils/menuConfig";
 
@@ -26,26 +17,31 @@ const StyledListSubHeader = styled(ListSubheader)`
   text-transform: uppercase;
   padding-left: 0px;
 `
+interface IProps {
+  width: number;
+  open: boolean;
+  backButtonClick: () => void;
+}
 
 
-const drawerWidth = 200;
 const prefix = "/dashboard"
-const Sidebar = () => {
+const Sidebar = (props: IProps) => {
   const router = useRouter();
   const selectedMenuKey = getSelectedKey(router.pathname);
 
   return (
     <Drawer
       sx={{
-        width: drawerWidth,
+        width: props.width,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: drawerWidth,
+          width: props.width,
           boxSizing: 'border-box',
-        },
+        }
       }}
-      variant="permanent"
+      variant="persistent"
       anchor="left"
+      open={props.open}
     >
       <Toolbar />
 
@@ -85,9 +81,13 @@ const Sidebar = () => {
           ))}
 
           {/* <Divider /> */}
-
         </Box>
       </PerfectScrollbar>
+      <Box>
+        <Button sx={{width: '100%'}} onClick={props.backButtonClick}>
+          <ChevronLeftIcon sx={{pt: 1, pb: 1}}/>
+        </Button>
+      </Box>
     </Drawer>
   )
 }

@@ -12,7 +12,7 @@ import { getBase64 } from "../../lib/utils/image-helper";
 import { useRouter } from "next/router";
 
 interface IProps {
-  cancelButtonClick: () => void
+  cancelButtonClick: () => void;
   detail: LayerResponse | undefined;
 }
 

@@ -7,20 +7,20 @@ class LayerService extends BaseApiService {
     return this.get<IResponse<LayerResponse>>("layers/" + id);
   }
 
-  async getLayerList(params: LayerListRequest): Promise<IResponse<LayerListResponse>> {
+  async getLayerList(params?: LayerListRequest): Promise<IResponse<LayerListResponse>> {
     return this.get<IResponse<LayerListResponse>>("layers", params);
   }
 
   async addLayer(data: AddLayerRequest): Promise<IResponse<LayerResponse>> {
-    return this.post<IResponse<LayerResponse>, AddLayerRequest>("/layers", data).then(this.showMessage(true));
+    return this.post<IResponse<LayerResponse>, AddLayerRequest>("layers", data).then(this.showMessage(true));
   }
 
   async editLayer(id: number, data: EditLayerRequest): Promise<IResponse<LayerResponse>> {
-    return this.put<IResponse<LayerResponse>, EditLayerRequest>("/layers/" + id, data).then(this.showMessage(true));
+    return this.put<IResponse<LayerResponse>, EditLayerRequest>("layers/" + id, data).then(this.showMessage(true));
   }
 
   async deleteLayer(id: number) {
-    return this.delete<IResponse<Boolean>>("/layers/" + id).then(this.showMessage(true));
+    return this.delete<IResponse<Boolean>>("layers/" + id).then(this.showMessage(true));
   }
 }
 
