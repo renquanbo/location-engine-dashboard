@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { LayerListResponse, LayerResponse, Layer } from "../../lib/model/layer";
 import layerService from "../../lib/services/layerService";
 import anchorService from "../../lib/services/anchorService";
-import { AddAnchorFormValues, Anchor } from "../../lib/model/anchor";
+import { Anchor } from "../../lib/model/anchor";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AnchorDialog from "../../components/anchors/AnchorDialog";
